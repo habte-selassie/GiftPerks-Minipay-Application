@@ -1,0 +1,32 @@
+{
+    "name": "Giften-Minipay",
+    "version": "1.0.0",
+    "description": "Custom Celo Composer project.",
+    "private": true,
+    "author": "Celo",
+    "license": "MIT",
+    "scripts": {
+        "react-app:dev": "yarn workspace @Giften-Minipay/react-app dev",
+        "react-app:build": "yarn workspace @Giften-Minipay/react-app build",
+        "react-app:start": "yarn workspace @Giften-Minipay/react-app start",
+        "react-app:lint": "yarn workspace @Giften-Minipay/react-app lint",
+        "hardhat:compile": "yarn workspace @Giften-Minipay/hardhat compile",
+        "subgraphs:test": "yarn workspace @Giften-Minipay/subgraphs test",
+        "subgraphs:get-abi": "yarn workspace @Giften-Minipay/subgraphs get-abi"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/celo-org/celo-composer.git"
+    },
+    "bugs": {
+        "url": "https://github.com/celo-org/celo-composer/issues"
+    },
+    "homepage": "https://github.com/celo-org/celo-composer/blob/main/README.md",
+    "workspaces": [
+        "packages/*"
+    ],
+    "keywords": [
+        "celo-composer",
+        "celo"
+    ]
+}
