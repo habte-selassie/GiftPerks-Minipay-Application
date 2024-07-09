@@ -15,7 +15,7 @@ contract TokenManager is Ownable {
     event TokensRedeemed(addres indexed recippient, uint256 amount);
 
     constructor(address _tokenAddress) {
-        token = IERC20(_tokenAddress)
+        token = IERC20(_tokenAddress);
     }
 
     function issueTokens(address recipient, uint256 amount) external onlyOwner {

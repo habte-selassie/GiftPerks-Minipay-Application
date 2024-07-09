@@ -17,15 +17,15 @@ pragma solidity ^0.8.0;
 
 
 
-#### 1. **Customer Tracking System**
-   - **Design Database Schema**:
-     - Create tables to store customer information, purchase history, and gift card issuance.
-     - Example schema:
-       - `Customers`: `customerId`, `name`, `email`, `phoneNumber`
-       - `Purchases`: `purchaseId`, `customerId`, `timestamp`, `amount`
-       - `GiftCards`: `cardId`, `customerId`, `tokenId`, `issueDate`
-   - **Smart Contract for Purchase Tracking**:
-     - Develop a smart contract to record each purchase on the blockchain.
+// #### 1. **Customer Tracking System**
+//    - **Design Database Schema**:
+//      - Create tables to store customer information, purchase history, and gift card issuance.
+//      - Example schema:
+//        - `Customers`: `customerId`, `name`, `email`, `phoneNumber`
+//        - `Purchases`: `purchaseId`, `customerId`, `timestamp`, `amount`
+//        - `GiftCards`: `cardId`, `customerId`, `tokenId`, `issueDate`
+//    - **Smart Contract for Purchase Tracking**:
+//      - Develop a smart contract to record each purchase on the blockchain.
 
 
 contract CustomerRewards {
@@ -40,26 +40,25 @@ contract CustomerRewards {
         address recipient;
     }
 
- ```solidity
-     // SPDX-License-Identifier: MIT
-     pragma solidity ^0.8.0;
+//  ```solidity
+ 
 
-     contract PurchaseTracker {
-         mapping(address => uint256) public purchaseCount;
+    //  contract PurchaseTracker {
+    //      mapping(address => uint256) public purchaseCount;
 
-         event PurchaseRecorded(address indexed customer, uint256 purchaseId);
+    //      event PurchaseRecorded(address indexed customer, uint256 purchaseId);
 
-         function recordPurchase(address customer) public {
-             purchaseCount[customer] += 1;
-             emit PurchaseRecorded(customer, purchaseCount[customer]);
-         }
-     }
-     ```
+    //      function recordPurchase(address customer) public {
+    //          purchaseCount[customer] += 1;
+    //          emit PurchaseRecorded(customer, purchaseCount[customer]);
+    //      }
+    //  }
+    //  ```
 
-       ```
-   - **Integration with Backend**:
-     - Integrate the smart contract with your backend using a service like Infura or Alchemy.
-     - Use web3.js or ethers.js to interact with the smart contract.
+//       ```
+//    - **Integration with Backend**:
+//      - Integrate the smart contract with your backend using a service like Infura or Alchemy.
+//      - Use web3.js or ethers.js to interact with the smart contract.
 
 
 
@@ -83,8 +82,8 @@ contract CustomerRewards {
 
     function issueGiftCard(address recipient) internal {
         giftCardCounter +=
-        giftCards[giftCardCounter] = GiftCard(100,true,recipient)
-        emit GiftCardIssued(recipient,giftCardCounter,100)
+        giftCards[giftCardCounter] = GiftCard(100,true,recipient);
+       // emit GiftCardIssued(recipient,giftCardCounter,100)
     }
 
     function redeemGiftCard(uint256 cardId, uint256 amount) public {
@@ -94,7 +93,7 @@ contract CustomerRewards {
 
         giftCards[cardId].balance -= amount;
         if( giftCards[cardId].balance == 0) {
-            giftCards[cardId].isActive == false
+            giftCards[cardId].isActive == false;
         }
     }
 
@@ -108,9 +107,9 @@ contract CustomerRewards {
 
 
 
-#### 2. **Blockchain Integration for Gift Cards**
-   - **Create Custom ERC-721 Token**:
-     - Use OpenZeppelin to create an ERC-721 token that represents the gift card.
+// #### 2. **Blockchain Integration for Gift Cards**
+//    - **Create Custom ERC-721 Token**:
+//      - Use OpenZeppelin to create an ERC-721 token that represents the gift card.
 
 
   // SPDX-License-Identifier: MIT
@@ -122,7 +121,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract GiftCard is ERC721 {
     uint256 public tokenCounter;
 
-    constructor() ERC721 ("GiftCard", G)
+    constructor() ERC721 ("GiftCard", G);
 }
 
 
@@ -130,12 +129,9 @@ contract GiftCard is ERC721 {
 
 
 
-You can organize these functions within a Solidity smart contract. Based on your requirements, it looks like you'll need a main contract to manage the creation and management of gift cards, points, stores, and users. Here’s a basic structure for how you might write these functions:
+// You can organize these functions within a Solidity smart contract. Based on your requirements, it looks like you'll need a main contract to manage the creation and management of gift cards, points, stores, and users. Here’s a basic structure for how you might write these functions:
 
-### Token Contract
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+// ### Token Contract
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -144,12 +140,12 @@ contract MyToken is ERC20 {
         _mint(msg.sender, 1000000 * 10 ** decimals()); // Mint initial tokens for contract deployer
     }
 }
-```
 
-### Reward and Referral Contract
-This contract will handle gift cards, points, and user/store registration.
 
-```solidity
+// ### Reward and Referral Contract
+// This contract will handle gift cards, points, and user/store registration.
+
+// ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -180,9 +176,9 @@ contract RewardSystem is Ownable {
     }
 
     uint256 public giftCardCounter;
-    mapping(uint256 => GiftCard> public giftCards;
-    mapping(address => Store> public stores;
-    mapping(address => User> public users;
+    mapping(uint256 => GiftCard) public giftCards;
+    mapping(address => Store) public stores;
+    mapping(address => User) public users;
 
     event GiftCardCreated(uint256 id, uint256 value, uint256 pointCost);
     event GiftCardAwarded(uint256 id, address recipient, uint256 balance);
@@ -247,20 +243,20 @@ contract RewardSystem is Ownable {
         return users[_user];
     }
 }
-```
+// ```
 
-### Explanation
-- **Token Contract:** This is a standard ERC20 token using OpenZeppelin's implementation.
-- **RewardSystem Contract:** This contract manages gift cards, points, stores, and users.
-  - **awardGiftCard:** Awards a gift card to a recipient.
-  - **awardPoints:** Awards points to a user.
-  - **createGiftCard:** Creates a new gift card.
-  - **registerStore:** Registers a new store.
-  - **registerUser:** Registers a new user.
-  - **getStorePoints:** Retrieves the points of a store.
-  - **getTotalPoints:** Retrieves the total points of a user.
-  - **getGiftCard:** Retrieves details of a gift card.
-  - **getStore:** Retrieves details of a store.
-  - **getUser:** Retrieves details of a user.
+// ### Explanation
+// - **Token Contract:** This is a standard ERC20 token using OpenZeppelin's implementation.
+// - **RewardSystem Contract:** This contract manages gift cards, points, stores, and users.
+//   - **awardGiftCard:** Awards a gift card to a recipient.
+//   - **awardPoints:** Awards points to a user.
+//   - **createGiftCard:** Creates a new gift card.
+//   - **registerStore:** Registers a new store.
+//   - **registerUser:** Registers a new user.
+//   - **getStorePoints:** Retrieves the points of a store.
+//   - **getTotalPoints:** Retrieves the total points of a user.
+//   - **getGiftCard:** Retrieves details of a gift card.
+//   - **getStore:** Retrieves details of a store.
+//   - **getUser:** Retrieves details of a user.
 
-This setup ensures a clear separation of concerns and leverages OpenZeppelin's reliable ERC20 implementation for the token functionalities. The RewardSystem contract handles the specific business logic for managing gift cards, points, stores, and users.
+// This setup ensures a clear separation of concerns and leverages OpenZeppelin's reliable ERC20 implementation for the token functionalities. The RewardSystem contract handles the specific business logic for managing gift cards, points, stores, and users.

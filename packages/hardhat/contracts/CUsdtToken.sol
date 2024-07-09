@@ -3,14 +3,13 @@ pragma solidity ^0.8.25;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract GiftenToken is ERC20 {
+contract CUSDT is ERC20 {
     constructor() ERC20("Celo USDT Token", "cusdt"){
 
     }
 
-    function mintGiftenToken(address _recipient, uint256 _amount) public {
+    function mintCusdToken(address _recipient, uint256 _amount) public {
         _mint(_recipient,_amount*10**18);
     }
     
 }
-

@@ -2,8 +2,11 @@
 pragma solidity ^0.8.0;
 
 // Develop a Solidity smart contract for tracking purchases and issuing gift cards (`GiftCard.sol`).
+import "./CUsdtToken.sol";
+import "./MarketPlace.sol";
+import "./GiftenToken.sol";
 
-contract GiftCard {
+contract GiftCard is GiftenMarketPlace, GiftenToken {
     struct GiftCardDetails {
         address recipient;
         uint256 balance;
@@ -11,18 +14,34 @@ contract GiftCard {
         address sender;
     }
 
-    mapping(address => uint256) public purchaseCount;
+    mapping(address => uint256) public purchaseCount; 
+     //to determine the number of purchase a user made
+    mapping(address => uint256) public userPoint;
     mapping (uint256 => GiftCardDetails) public giftCards;
+     //a number/index to giftcard details struct
     uint256 public giftCardCounter;
 
     event GiftCardIssued(address indexed recipient, uint256 cardId, uint256 balance);
     event Redeemed(address indexed recipient, uint256 cardId, uint256 balance);
     event Spent(address indexed recipient, uint256 amount);
 
-    function recordPurchase(address customer) public {
-        purchaseCount[customer] += 1;
-        if (purchaseCount[customer] == 2) {
-            issueGiftCard(customer);
+    function recordPurchase() internal {
+         //implement / import a function from market place where users purchases items from shops
+        purchaseCount[msg.sender] += 1;
+        if (purchaseCount[msg.sender] > 2) {
+        //  issueGiftCard(customer);
+            userPoint[msg.sender] +=1;
+        }
+    }
+
+    function buyAndBurn(uint256 _itemIndex) public {
+        if(balanceOf(msg.sender) > 0) {
+            buyItem(_itemIndex, balanceOf(msg.sender));
+            recordPurchase();
+            _burn(msg.sender, balanceOf(msg.sender));
+        } else {
+            buyItem(_itemIndex, 0);
+            recordPurchase();
         }
     }
 
@@ -32,35 +51,21 @@ contract GiftCard {
         emit GiftCardIssued(recipient, giftCardCounter, 100);
     }
 
-    function redeemGiftCard(uint256 cardId, uint256 amount) public {
-        require(giftCards[cardId].recipient == msg.sender, "Not the owner");
-        require(giftCards[cardId].isActive, "Card is not active");
-        require(giftCards[cardId].balance >= amount, "Insufficient balance");
-        giftCards[cardId].balance -= amount;
-        emit Redeemed(msg.sender, cardId, giftCards[cardId].balance);
+    function redeemGiftCard() public {
+
+        require(userPoint[msg.sender] > 0, "there is no balance");
+        uint256 newBalance = userPoint[msg.sender];
+        mintGiftenToken(msg.sender,newBalance);
+        userPoint[msg.sender] = 0;
+        purchaseCount[msg.sender] = 0;
+
+        //transfer cusd to  recepient
+
+        emit Redeemed(msg.sender, newBalance);
     }
 
-    function issue(bytes32 hash, uint256 value) public {
-        require(msg.sender == owner, "Only the owner can issue new giftcards");
-        require(value > 0, "Giftcard must have a balance");
-        require(giftCards[uint256(hash)].balance == 0, "Giftcard already issued");
-
-        giftCardCounter += 1;
-        giftCards[giftCardCounter] = GiftCardDetails({
-            recipient: address(0), // No owner yet
-            balance: value,
-            isActive: true,
-            sender: msg.sender
-        });
-
-        emit GiftCardIssued(address(0), giftCardCounter, value);
-    }
-
-    address public owner;
-
-    constructor() {
-        owner = msg.sender;
-    }
+    
+   
 
     function spend(address by, uint amount) public {
         require(msg.sender == owner, "Only the owner can deduct from balance");
