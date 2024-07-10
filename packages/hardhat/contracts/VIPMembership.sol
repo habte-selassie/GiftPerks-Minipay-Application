@@ -19,7 +19,7 @@ contract VIPMembership is Ownable {
     }
 
     function spend(address customer, uint256 amount) external {
-        spending[customer] = spending[customer].add(amount)
+        spending[customer] = spending[customer].add(amount);
         if(!isVIP[customer] && spending[customer] >= VIPThreshold){
             isVIP[customer] = true;
             emit VIPStatusChanged(customer, true);

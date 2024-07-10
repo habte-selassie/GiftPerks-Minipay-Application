@@ -12,4 +12,8 @@ contract CUSDT is ERC20 {
         _mint(_recipient,_amount*10**18);
     }
     
+    function getTokenAddress() public view returns(address){
+        return address(this);
+    }
+    
 }
