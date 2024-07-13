@@ -76,7 +76,111 @@ contract GiftenMarketPlace {
         require(isOwner[msg.sender], "Not owner");
         _;
     }
+ITEM SELLER OR BUSINESS
 
+
+
+To build a full-featured Web3 marketplace with item description, checkout functionality, and CRUD operations for sellers, we need to implement both the front-end (React) and back-end (Solidity) components. Here’s how you can do this:
+
+### Solidity Smart Contract
+
+We'll extend the `GiftenMarketPlace` contract to include CRUD operations for item sellers and payment processing. The contract will also handle item purchases and payouts.
+
+#### Updated `GiftenMarketPlace.sol`
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.25;
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+contract GiftenMarketPlace {
+    using SafeMath for uint256;
+
+    address public owner;
+    IERC20 public cusdToken;
+
+    struct GiftItem {
+        uint256 itemId;
+        uint256 itemPrice;
+        string name;
+        string description;
+        address seller;
+        bool isSold;
+    }
+
+    mapping(uint256 => GiftItem) public giftItems;
+    uint256 public itemIndex;
+
+    event ItemCreated(uint256 itemId, string name, uint256 itemPrice, string description, address indexed seller);
+    event ItemUpdated(uint256 itemId, string name, uint256 itemPrice, string description);
+    event ItemDeleted(uint256 itemId);
+    event ItemPurchased(uint256 itemId, address indexed buyer, address indexed seller, uint256 itemPrice);
+
+    constructor(address _cusdToken) {
+        owner = msg.sender;
+        cusdToken = IERC20(_cusdToken);
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        _;
+    }
+
+    modifier onlySeller(uint256 _itemId) {
+        require(msg.sender == giftItems[_itemId].seller, "Not seller");
+        _;
+    }
+
+    function createItem(string memory _name, uint256 _itemPrice, string memory _description) public {
+        giftItems[itemIndex] = GiftItem({
+            itemId: itemIndex,
+            itemPrice: _itemPrice,
+            name: _name,
+            description: _description,
+            seller: msg.sender,
+            isSold: false
+        });
+        emit ItemCreated(itemIndex, _name, _itemPrice, _description, msg.sender);
+        itemIndex++;
+    }
+
+    function updateItem(uint256 _itemId, string memory _name, uint256 _itemPrice, string memory _description) public onlySeller(_itemId) {
+        GiftItem storage item = giftItems[_itemId];
+        item.name = _name;
+        item.itemPrice = _itemPrice;
+        item.description = _description;
+        emit ItemUpdated(_itemId, _name, _itemPrice, _description);
+    }
+
+    function deleteItem(uint256 _itemId) public onlySeller(_itemId) {
+        delete giftItems[_itemId];
+        emit ItemDeleted(_itemId);
+    }
+
+    function buyItem(uint256 _itemId) public {
+        GiftItem storage item = giftItems[_itemId];
+        require(!item.isSold, "Item already sold");
+
+        cusdToken.transferFrom(msg.sender, item.seller, item.itemPrice);
+        item.isSold = true;
+        emit ItemPurchased(_itemId, msg.sender, item.seller, item.itemPrice);
+    }
+
+    function getItem(uint256 _itemId) public view returns (GiftItem memory) {
+        return giftItems[_itemId];
+    }
+
+    function getAllItems() public view returns (GiftItem[] memory) {
+        GiftItem[] memory items = new GiftItem[](itemIndex);
+        for (uint256 i = 0; i < itemIndex; i++) {
+            items[i] = giftItems[i];
+        }
+        return items;
+    }
+}
+```
     function createItem(uint256 _itemPrice, string memory _description) public {
         giftItems[itemIndex] = GiftItem({
             itemId: itemIndex,

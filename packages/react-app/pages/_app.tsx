@@ -93,3 +93,63 @@ function App({ Component, pageProps }: AppProps) {
 
 
 export default App;
+
+
+```tsx
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MarketplacePage from './pages/MarketplacePage';
+import ItemDetailsPage from './pages/ItemDetailsPage';
+import CheckoutPage from './pages/CheckoutPage';
+import PurchaseHistoryPage from './pages/PurchaseHistoryPage';
+
+const App: React.FC = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<MarketplacePage />} />
+                <Route path="/item/:id" element={<ItemDetailsPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/purchases" element={<PurchaseHistoryPage />} />
+            </Routes>
+        </Router>
+    );
+};
+
+export default App;
+```
+
+
+#### App.tsx
+
+Update `App.tsx` to include routing for the new components.
+
+```tsx
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Marketplace from "./Marketplace";
+import ItemDetails from "./ItemDetails";
+import Checkout from "./Checkout";
+import SellerForm from "./SellerForm";
+
+const contractAddress = "YOUR_CONTRACT_ADDRESS";
+
+const App = () => {
+    return (
+        <Router>
+            <div>
+                <Routes>
+                    <Route path="/" element={<Marketplace contractAddress={contractAddress} />} />
+                    <Route path="/item/:itemId" element={<ItemDetails contract
+
+Address={contractAddress} />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/sell" element={<SellerForm contractAddress={contractAddress} />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+};
+
+export default App;
+```

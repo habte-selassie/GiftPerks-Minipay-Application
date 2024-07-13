@@ -55,3 +55,54 @@ const MarketplacePage: React.FC = () => {
 };
 
 export default MarketplacePage;
+### React Front-End
+
+We need to create UI components for the marketplace, item details, checkout, and seller form with CRUD operations.
+
+#### Dependencies
+
+Ensure you have the following dependencies installed in your React project:
+
+```sh
+npm install @openzeppelin/contracts ethers web3modal
+```
+
+#### Marketplace Component
+
+Create a `Marketplace.tsx` component to display items.
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import GiftenMarketPlace from "./artifacts/contracts/GiftenMarketPlace.sol/GiftenMarketPlace.json";
+
+const Marketplace = ({ contractAddress }) => {
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        loadItems();
+    }, []);
+
+    async function loadItems() {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, GiftenMarketPlace.abi, provider);
+        const items = await contract.getAllItems();
+        setItems(items);
+    }
+
+    return (
+        <div>
+            <h2>Marketplace</h2>
+            {items.map((item, index) => (
+                <div key={index} className="item-card">
+                    <h3>{item.name}</h3>
+                    <p>{item.description}</p>
+                    <p>Price: {ethers.utils.formatEther(item.itemPrice)} cUSD</p>
+                    <button onClick={() => window.location.href = `/item/${item.itemId}`}>View Details</button>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+export default Marketplace;

@@ -53,3 +53,22 @@ const CheckoutPage: React.FC = () => {
 };
 
 export default CheckoutPage;
+#### Checkout Component
+
+Create a `Checkout.tsx` component to handle the checkout process.
+
+```tsx
+import React from "react";
+
+const Checkout = ({ item }) => {
+    return (
+        <div>
+            <h2>Checkout</h2>
+            <p>Item: {item.name}</p>
+            <p>Price: {item.price}</p>
+            <button onClick={item.buy}>Complete Purchase</button>
+        </div>
+    );
+};
+
+export default Checkout;
