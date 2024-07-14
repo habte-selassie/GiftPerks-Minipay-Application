@@ -15,6 +15,10 @@ import SignUp from '../components/Auth/Signup';
 import SignIn from '../components/Auth/Login';
 import SignOutButton from '../components/Auth/Logout';
 import './styles/App.css';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Marketplace from "./Marketplace";
+import VipSubscriptionPage from "./VipSubscription";
+
 
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -147,6 +151,16 @@ Address={contractAddress} />} />
                     <Route path="/sell" element={<SellerForm contractAddress={contractAddress} />} />
                 </Routes>
             </div>
+             <Router>
+        <div>
+            <nav>
+                <Link to="/marketplace">Marketplace</Link>
+                <Link to="/vip-subscription">VIP Subscription</Link>
+            </nav>
+            <Route path="/marketplace" component={() => <Marketplace marketplaceAddress="0xYourMarketplaceAddress" vipAddress="0xYourVipSubscriptionAddress" />} />
+            <Route path="/vip-subscription" component={() => <VipSubscriptionPage contractAddress="0xYourVipSubscriptionAddress" />} />
+        </div>
+    </Router>
         </Router>
     );
 };
