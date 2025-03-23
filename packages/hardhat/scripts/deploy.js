@@ -20,6 +20,11 @@ async function main() {
 
     await lock.deployed();
 
+    const GiftCard = await ethers.getContractFactory("GiftCard")
+    const giftcard = await GiftCard.deploy()
+    await giftcard.deployed()
+    console.log("GiftCard deployed to:", giftcard.address);
+
     console.log(
         `Lock with 0.0001 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
     );

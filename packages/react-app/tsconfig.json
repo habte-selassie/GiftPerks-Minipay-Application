@@ -25,6 +25,7 @@
       "@local-contracts/*": ["../hardhat/*"]
     },
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["src","next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/Auth/Login.js", "components/Auth/Logout.js", "components/Auth/Signup.js"],
   "exclude": ["node_modules"]
 }
+
